@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-airbnb",
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
+  "rulesDirectory": ["tslint-plugin-prettier"],
+  "linterOptions": {
+    "exclude": ["src/serviceWorker.ts"]
+  },
+  "rules": {
+    "import-name": false,
+    "prettier": true,
+    "interface-name": false,
+    "object-literal-sort-keys": false
+  }
+}
