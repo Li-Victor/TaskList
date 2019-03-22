@@ -1,28 +1,57 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
 
-class App extends Component {
-  render() {
+import { Task, TaskState } from './model/Task';
+import TaskGraph from './model/TaskGraph';
+
+import payload from './payload.json';
+
+const graph: TaskGraph = new TaskGraph();
+graph.setUp(payload);
+
+interface AppState {
+  tasks: Task[];
+}
+
+class App extends React.Component<{}, AppState> {
+  public state = {
+    tasks: graph.getAllTasks()
+  };
+
+  public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
+      <div>
+        {this.state.tasks.map((task: Task) => (
+          <div
+            key={task.getId()}
+            style={{ color: this.getColor(task.getState()) }}
+            onClick={() => this.clickTask(task)}
           >
-            Learn React
-          </a>
-        </header>
+            {task.getGroup()}: {task.getName()}
+          </div>
+        ))}
       </div>
     );
   }
+
+  private clickTask = (task: Task) => {
+    if (task.getState() !== TaskState.LOCKED) {
+      if (task.getState() === TaskState.OPEN) graph.checkTask(task.getId());
+      else graph.uncheckTask(task.getId());
+
+      this.setState({});
+    }
+  };
+
+  private getColor = (state: TaskState): string => {
+    switch (state) {
+      case TaskState.OPEN:
+        return 'black';
+      case TaskState.COMPLETE:
+        return 'green';
+      default:
+        return 'red';
+    }
+  };
 }
 
 export default App;
