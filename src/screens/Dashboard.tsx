@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import Group from '../assets/Group.svg';
 import { Task, TaskState } from '../model/Task';
 
 interface DashboardProps {
@@ -13,20 +14,36 @@ const Dashboard = ({ groups, displayTaskGroup }: DashboardProps) => {
     const [groupName, tasks] = group;
     return (
       <div key={groupName} onClick={() => displayTaskGroup(groupName)}>
-        <h1>{groupName}</h1>
-        <h3>
-          {
-            tasks.filter((task: Task) => {
-              return task.getState() === TaskState.COMPLETE;
-            }).length
-          }{' '}
-          OF {tasks.length} TASKS COMPLETE
-        </h3>
+        <div className="row">
+          <div className="row__imageContainer">
+            <img src={Group} />
+          </div>
+
+          <div>
+            <h3 className="row__info--groupName">{groupName}</h3>
+            <h4 className="row__info--numTaskCompleted">
+              {
+                tasks.filter((task: Task) => {
+                  return task.getState() === TaskState.COMPLETE;
+                }).length
+              }{' '}
+              OF {tasks.length} TASKS COMPLETE
+            </h4>
+          </div>
+        </div>
+
+        <hr />
       </div>
     );
   });
 
-  return <div>{content}</div>;
+  return (
+    <div className="container">
+      <h1 className="dashboard__header">Things To Do</h1>
+      <hr />
+      {content}
+    </div>
+  );
 };
 
 export default Dashboard;

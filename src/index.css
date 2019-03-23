@@ -7,3 +7,77 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.container {
+  margin-top: 120px;
+  margin-left: 120px;
+  margin-right: 120px;
+}
+
+.dashboard__header {
+  font-weight: 'normal';
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.row__imageContainer {
+  margin-right: 24px;
+}
+
+.row__info--groupName {
+  margin: 0;
+}
+
+.row__info--numTaskCompleted {
+  margin: 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: grey;
+}
+
+.row__logoContainer {
+  width: 21px;
+  height: 21px;
+}
+
+.row__logoContainer--image {
+  display: block;
+  margin: 0 auto;
+}
+
+.row__task {
+  margin-left: 24px;
+  height: 21px;
+  font-weight: bold;
+}
+
+.row__task--locked {
+  color: grey;
+}
+
+.row__task--completed {
+  text-decoration: line-through;
+}
+
+.list__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.list__header--groupName {
+  margin: 0;
+  font-weight: normal;
+}
+
+.list__header--back {
+  margin: 0;
+  font-weight: normal;
+  color: #07C;
+}
