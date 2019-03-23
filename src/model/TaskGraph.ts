@@ -56,9 +56,10 @@ export default class TaskGraph {
         }
       });
     });
+
     // initially set all tasks with 0 dependencies to be open
     this.getAllTasks().forEach((task: Task) => {
-      if (task.getDependencies().length === 0) task.setState(TaskState.OPEN);
+      if (task.getDependencies().size === 0) task.setState(TaskState.OPEN);
     });
   }
 
@@ -86,11 +87,14 @@ export default class TaskGraph {
 
       const childParentCompleted = childNode.getParentsCompleted();
       const dependencyIds = childNode.getDependencies();
-      childParentCompleted.add(id);
 
-      // all dependencies are completed, so set to open
-      if (childParentCompleted.size === dependencyIds.length) {
-        childNode.setState(TaskState.OPEN);
+      // checks to see if this child dependency is this task
+      if (dependencyIds.has(id)) {
+        childParentCompleted.add(id);
+        // all dependencies are completed, so set to open
+        if (childParentCompleted.size === dependencyIds.size) {
+          childNode.setState(TaskState.OPEN);
+        }
       }
     });
   }

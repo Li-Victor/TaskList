@@ -10,7 +10,7 @@ export class Task {
   private readonly id: TaskID;
   private group: string;
   private name: string;
-  private readonly dependencyIds: TaskID[];
+  private dependencyIds: Set<TaskID>;
 
   private parentsCompleted: Set<TaskID>;
   private state: TaskState;
@@ -23,7 +23,7 @@ export class Task {
     name: string
   ) {
     this.id = id;
-    this.dependencyIds = dependencyIds;
+    this.dependencyIds = new Set(dependencyIds);
     this.group = group;
     this.name = name;
 
@@ -36,7 +36,7 @@ export class Task {
     return this.id;
   }
 
-  public getDependencies(): TaskID[] {
+  public getDependencies(): Set<TaskID> {
     return this.dependencyIds;
   }
 
