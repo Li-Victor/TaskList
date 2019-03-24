@@ -10,9 +10,9 @@ export class Task {
   private readonly id: TaskID;
   private group: string;
   private name: string;
-  private dependencyIds: Set<TaskID>;
+  private dependencyIds: TaskID[];
 
-  private parentsCompleted: Set<TaskID>;
+  private dependenciesCompleted: Set<TaskID>;
   private state: TaskState;
   private children: TaskID[];
 
@@ -23,20 +23,20 @@ export class Task {
     name: string
   ) {
     this.id = id;
-    this.dependencyIds = new Set(dependencyIds);
+    this.dependencyIds = dependencyIds;
     this.group = group;
     this.name = name;
 
     this.state = TaskState.LOCKED;
     this.children = [];
-    this.parentsCompleted = new Set<TaskID>();
+    this.dependenciesCompleted = new Set<TaskID>();
   }
 
   public getId(): TaskID {
     return this.id;
   }
 
-  public getDependencies(): Set<TaskID> {
+  public getDependencyIds(): TaskID[] {
     return this.dependencyIds;
   }
 
@@ -64,7 +64,24 @@ export class Task {
     this.children.push(taskId);
   }
 
-  public getParentsCompleted(): Set<TaskID> {
-    return this.parentsCompleted;
+  public getDependenciesCompleted(): Set<TaskID> {
+    return this.dependenciesCompleted;
+  }
+
+  public addDependencyCompleted(id: TaskID): void {
+    if (this.dependencyIds.indexOf(id) !== -1) {
+      this.dependenciesCompleted.add(id);
+
+      if (this.dependenciesCompleted.size === this.dependencyIds.length) {
+        this.setState(TaskState.OPEN);
+      }
+    }
+  }
+
+  public deleteDependencyCompleted(id: TaskID): void {
+    this.dependenciesCompleted.delete(id);
+    if (this.dependenciesCompleted.size !== this.dependencyIds.length) {
+      this.setState(TaskState.LOCKED);
+    }
   }
 }

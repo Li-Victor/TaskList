@@ -23,6 +23,7 @@ body {
   align-items: center;
   margin-top: 24px;
   margin-bottom: 24px;
+  cursor: pointer;
 }
 
 .row__imageContainer {
@@ -58,6 +59,7 @@ body {
 
 .row__task--locked {
   color: grey;
+  cursor: not-allowed;
 }
 
 .row__task--completed {
@@ -80,4 +82,5 @@ body {
   margin: 0;
   font-weight: normal;
   color: #07C;
+  cursor: pointer;
 }

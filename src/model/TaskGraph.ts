@@ -59,7 +59,7 @@ export default class TaskGraph {
 
     // initially set all tasks with 0 dependencies to be open
     this.getAllTasks().forEach((task: Task) => {
-      if (task.getDependencies().size === 0) task.setState(TaskState.OPEN);
+      if (task.getDependencyIds().length === 0) task.setState(TaskState.OPEN);
     });
   }
 
@@ -84,18 +84,7 @@ export default class TaskGraph {
       const childNode = this.getTask(childID);
 
       if (childNode === undefined) return;
-
-      const childParentCompleted = childNode.getParentsCompleted();
-      const dependencyIds = childNode.getDependencies();
-
-      // checks to see if this child dependency is this task
-      if (dependencyIds.has(id)) {
-        childParentCompleted.add(id);
-        // all dependencies are completed, so set to open
-        if (childParentCompleted.size === dependencyIds.size) {
-          childNode.setState(TaskState.OPEN);
-        }
-      }
+      childNode.addDependencyCompleted(id);
     });
   }
 
@@ -117,15 +106,15 @@ export default class TaskGraph {
 
     // perform bfs and set descendants of task to be locked
     // queue holds descendants IDs
-    // parentIDQueue holds descendant's parent IDs
+    // dependencyIdQueue holds the dependencyIDs for the child to delete
     const queue: TaskID[] = [...taskNode.getChildren()];
-    const parentIdQueue: TaskID[] = Array(taskNode.getChildren().length).fill(
-      taskNode.getId()
-    );
+    const dependencyIdQueue: TaskID[] = Array(
+      taskNode.getChildren().length
+    ).fill(taskNode.getId());
 
-    while (queue.length !== 0 && parentIdQueue.length !== 0) {
+    while (queue.length !== 0 && dependencyIdQueue.length !== 0) {
       const taskChildId = queue.shift();
-      const parentId = parentIdQueue.shift();
+      const parentId = dependencyIdQueue.shift();
 
       if (taskChildId === undefined || parentId === undefined) continue;
 
@@ -133,12 +122,11 @@ export default class TaskGraph {
       if (taskChildNode === undefined) continue;
 
       // delete parent off of parents completed and set task to locked
-      taskChildNode.getParentsCompleted().delete(parentId);
-      taskChildNode.setState(TaskState.LOCKED);
+      taskChildNode.deleteDependencyCompleted(parentId);
 
       taskChildNode.getChildren().forEach((taskChildNodeChildId: TaskID) => {
         queue.push(taskChildNodeChildId);
-        parentIdQueue.push(taskChildNode.getId());
+        dependencyIdQueue.push(taskChildNode.getId());
       });
     }
   }
